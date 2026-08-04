@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ODYSSEOS — Premium Sports Nutrition</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@500;700;800&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              400: '#ff8533',
+              500: '#ea580c',
+              accent: '#ff6b00',
+              deep: '#431407',
+            },
+          },
+          fontFamily: {
+            syne: ['Syne', 'sans-serif'],
+            jakarta: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          boxShadow: {
+            'neon-soft': '0 0 24px rgba(255,107,0,0.45)',
+            'neon-strong': '0 0 40px rgba(255,107,0,0.7)',
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="font-jakarta text-white antialiased">
+  <div id="heroContainer" class="relative w-screen h-screen overflow-hidden bg-black cyber-grid">
+    <div class="hero-stage absolute inset-0 z-[1]">
+      <img class="base-image absolute inset-0" src="https://strvid.nyc3.cdn.digitaloceanspaces.com/motionsite/statu-image.png" alt="ODYSSEOS athletic sculpture" draggable="false" />
+      <div id="maskLayer">
+        <img class="mask-image absolute inset-0 w-full h-full" src="https://strvid.nyc3.cdn.digitaloceanspaces.com/motionsite/statu-image-hover.png" alt="" draggable="false" aria-hidden="true" />
+      </div>
+    </div>
+    <div id="spotlightHalo" aria-hidden="true"></div>
+    <canvas id="particlesCanvas"></canvas>
+
+    <header class="ui-layer absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-4 sm:px-8 py-5 md:py-6">
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="logo-emblem w-10 h-10 rounded-lg bg-black/80 border border-brand-accent/40 flex items-center justify-center">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 3L21 20H3L12 3Z" stroke="#ff6b00" stroke-width="1.5" fill="rgba(255,107,0,0.15)" />
+            <circle cx="12" cy="13" r="2" fill="#ff6b00" />
+          </svg>
+        </div>
+        <span class="font-syne font-extrabold text-2xl tracking-wider text-white group-hover:text-brand-accent transition-colors">ODYSSEOS</span>
+      </a>
+      <nav class="nav-capsule hidden md:flex items-center gap-1 px-6 py-2 rounded-full text-sm font-medium">
+        <a href="#" class="relative px-3 py-1 text-brand-accent nav-link-active">Home</a>
+        <a href="#catalog" class="px-3 py-1 text-slate-300 hover:text-white transition-colors">Products</a>
+        <a href="#categories" class="px-3 py-1 text-slate-300 hover:text-white transition-colors">Categories</a>
+        <a href="#about" class="px-3 py-1 text-slate-300 hover:text-white transition-colors">About</a>
+        <a href="#contact" class="px-3 py-1 text-slate-300 hover:text-white transition-colors">Contact</a>
+      </nav>
+      <div class="flex items-center gap-2 sm:gap-3">
+        <button type="button" id="soundToggle" class="glass-btn w-10 h-10 rounded-full flex items-center justify-center text-slate-200 hover:text-brand-accent hover:border-brand-accent/40 transition-colors" aria-label="Toggle sound">
+          <i data-lucide="volume-2" class="w-5 h-5"></i>
+        </button>
+        <a href="#catalog" class="hidden md:inline-flex items-center bg-brand-500 hover:bg-brand-400 text-black font-bold rounded-full px-5 py-2 text-sm shadow-neon-soft transition-colors">Shop Collection</a>
+        <button type="button" id="menuToggle" class="glass-btn md:hidden w-9 h-9 rounded-full flex items-center justify-center text-slate-200" aria-label="Open menu" aria-expanded="false">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </header>
+
+    <div id="menuBackdrop" class="ui-layer fixed inset-0 z-40 bg-black/60 opacity-0 pointer-events-none transition-opacity duration-300 md:hidden" aria-hidden="true"></div>
+    <aside id="mobileDrawer" class="mobile-menu-drawer ui-layer fixed top-0 right-0 z-40 h-full w-[min(100%,320px)] nav-capsule border-l border-brand-accent/30 p-8 pt-24 md:hidden">
+      <nav class="flex flex-col gap-4 text-lg font-medium">
+        <a href="#" class="text-brand-accent">Home</a>
+        <a href="#catalog">Products</a>
+        <a href="#categories">Categories</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+        <a href="#catalog" class="mt-4 inline-flex justify-center bg-brand-500 text-black font-bold rounded-full px-5 py-3">Shop Collection</a>
+      </nav>
+    </aside>
+
+    <main class="ui-layer absolute inset-0 z-20 flex flex-col justify-center px-4 sm:px-8 md:px-12 lg:px-16 max-w-3xl pointer-events-none">
+      <div class="pointer-events-auto space-y-6 sm:space-y-8">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/85 border border-brand-accent/40 text-brand-accent text-xs font-semibold uppercase tracking-wider">
+          <span class="w-2 h-2 rounded-full bg-brand-accent animate-pulse shadow-neon-soft"></span>
+          Premium Sports Nutrition
+        </div>
+        <h1 class="font-syne text-5xl sm:text-7xl xl:text-8xl font-extrabold leading-none drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)]">ODYSSEOS</h1>
+        <p class="text-lg sm:text-2xl font-light text-slate-200 tracking-wide max-w-xl">Premium Sports Nutrition Engineered for Peak Performance.</p>
+        <div class="flex flex-wrap gap-4 pt-2">
+          <a href="#catalog" class="group glass-btn inline-flex items-center gap-3 rounded-full pl-5 pr-2 py-2 text-sm font-semibold hover:border-brand-accent/40 transition-colors">
+            Shop Now
+            <span class="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center group-hover:bg-brand-accent group-hover:translate-x-1 transition-all"><i data-lucide="arrow-right" class="w-4 h-4"></i></span>
+          </a>
+          <a href="#catalog" class="inline-flex items-center gap-3 rounded-full px-5 py-2.5 text-sm font-semibold bg-brand-deep border border-brand-accent/50 text-brand-accent hover:bg-orange-950/80 transition-colors">
+            <span class="w-7 h-7 rounded-md bg-black/50 border border-brand-accent/40 flex items-center justify-center">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 3L21 20H3L12 3Z" fill="rgba(255,107,0,0.4)" stroke="#ff6b00" stroke-width="1"/></svg>
+            </span>
+            Explore Products
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <footer class="ui-layer absolute bottom-0 left-0 right-0 z-30 flex items-end justify-between px-4 sm:px-8 pb-5 sm:pb-6">
+      <div class="flex items-center gap-4 text-slate-400">
+        <a href="#" class="hover:text-brand-accent transition-colors" aria-label="Facebook"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+        <a href="#" class="hover:text-brand-accent transition-colors" aria-label="Instagram"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+        <a href="#" class="hover:text-brand-accent transition-colors" aria-label="Twitter"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+      </div>
+      <div class="hidden sm:flex flex-col items-center gap-1 text-[10px] text-slate-500 uppercase tracking-widest">
+        <div class="w-[22px] h-9 rounded-full border border-brand-accent/40 flex justify-center pt-1.5">
+          <div class="scroll-wheel-dot w-1 h-2 rounded-full bg-brand-accent"></div>
+        </div>
+        Scroll
+      </div>
+      <div class="font-mono text-[10px] sm:text-xs uppercase tracking-wider text-brand-accent/90 flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/70 border border-brand-accent/30">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse"></span>
+        PERFORMANCE MODE ACTIVE
+      </div>
+    </footer>
+  </div>
+
+  <!-- Floating Cart -->
+  <button type="button" id="floatCartBtn" class="glass-btn w-14 h-14 rounded-full flex items-center justify-center text-brand-accent hover:shadow-neon-strong transition-shadow" aria-label="Open cart">
+    <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+    <span id="cartBadge" class="absolute -top-1 -right-1 min-w-[22px] h-[22px] px-1 rounded-full bg-brand-accent text-black text-xs font-bold flex items-center justify-center">0</span>
+  </button>
+  <div id="cartBackdrop"></div>
+  <aside id="cartDrawer" class="flex flex-col p-6 sm:p-8" aria-label="Shopping cart">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="font-syne text-2xl font-bold">Your Cart</h2>
+      <button type="button" id="cartClose" class="glass-btn w-10 h-10 rounded-full flex items-center justify-center" aria-label="Close cart"><i data-lucide="x" class="w-5 h-5"></i></button>
+    </div>
+    <div id="cartItems" class="flex-1 overflow-y-auto space-y-4 min-h-0"></div>
+    <div class="border-t border-white/10 pt-6 mt-4 space-y-3 text-sm">
+      <div class="flex justify-between text-slate-400"><span>Subtotal</span><span id="cartSubtotal" class="text-white font-semibold">$0.00</span></div>
+      <div class="flex justify-between text-slate-400"><span>Shipping</span><span id="cartShipping" class="text-white font-semibold">$9.99</span></div>
+      <div class="flex gap-2">
+        <input id="discountInput" type="text" placeholder="Discount code" class="flex-1 rounded-full bg-black/60 border border-white/15 px-4 py-2 text-sm focus:border-brand-accent/50 outline-none" />
+        <button type="button" id="applyDiscount" class="rounded-full px-4 py-2 bg-brand-deep border border-brand-accent/40 text-brand-accent text-sm font-semibold">Apply</button>
+      </div>
+      <p id="discountNote" class="text-xs text-brand-accent hidden"></p>
+      <div class="flex justify-between text-lg font-syne font-bold pt-2"><span>Estimated Total</span><span id="cartTotal" class="text-brand-accent">$0.00</span></div>
+      <button type="button" id="checkoutBtn" class="w-full mt-2 bg-brand-500 hover:bg-brand-400 text-black font-bold rounded-full py-3.5 shadow-neon-soft transition-all">Checkout</button>
+    </div>
+  </aside>
+
+  <section id="categories" class="store-grid py-24 sm:py-32 px-4 sm:px-8 border-t border-white/5">
+    <div class="max-w-7xl mx-auto reveal-section">
+      <p class="text-brand-accent text-xs font-semibold uppercase tracking-[0.2em] mb-3">Curated For Athletes</p>
+      <h2 class="font-syne text-4xl sm:text-5xl font-extrabold mb-4">Featured Categories</h2>
+      <p class="text-slate-400 max-w-xl mb-12 font-light">Complete premium supplementation — protein to recovery, vitamins to accessories.</p>
+      <div id="categoryGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 sm:gap-5"></div>
+    </div>
+  </section>
+
+  <section id="products" class="store-grid py-20 px-4 sm:px-8 border-t border-white/5">
+    <div class="max-w-7xl mx-auto reveal-section mb-14">
+      <p class="text-brand-accent text-xs font-semibold uppercase tracking-[0.2em] mb-3">The Collection</p>
+      <h2 class="font-syne text-4xl sm:text-6xl font-extrabold">Featured Products</h2>
+    </div>
+    <div id="featuredGrid" class="max-w-7xl mx-auto grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"></div>
+  </section>
+
+  <section id="best-sellers" class="store-grid py-20 px-4 sm:px-8">
+    <div class="max-w-7xl mx-auto reveal-section mb-12">
+      <p class="text-brand-accent text-xs font-semibold uppercase tracking-[0.2em] mb-3">Top Performance</p>
+      <h2 class="font-syne text-4xl sm:text-5xl font-extrabold">Best Sellers</h2>
+    </div>
+    <div id="bestSellersGrid" class="max-w-7xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+  </section>
+
+  <section id="new-arrivals" class="store-grid py-20 px-4 sm:px-8 border-t border-white/5">
+    <div class="max-w-7xl mx-auto reveal-section mb-12">
+      <p class="text-brand-accent text-xs font-semibold uppercase tracking-[0.2em] mb-3">Just Dropped</p>
+      <h2 class="font-syne text-4xl sm:text-5xl font-extrabold">New Arrivals</h2>
+    </div>
+    <div id="newArrivalsGrid" class="max-w-7xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+  </section>
+
+  <section id="catalog" class="store-grid py-24 px-4 sm:px-8 border-t border-white/5">
+    <div class="max-w-7xl mx-auto reveal-section mb-16">
+      <p class="text-brand-accent text-xs font-semibold uppercase tracking-[0.2em] mb-3">Full Catalog</p>
+      <h2 class="font-syne text-4xl sm:text-6xl font-extrabold">Shop Every Category</h2>
+    </div>
+    <div id="catalogSections" class="max-w-7xl mx-auto space-y-20"></div>
+  </section>
+
+  <section id="about" class="store-grid py-28 px-4 sm:px-8 border-t border-white/5">
+    <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div class="reveal-section relative rounded-3xl overflow-hidden glass-card aspect-[4/5] lg:aspect-auto lg:min-h-[520px]">
+        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80" alt="Athlete training" class="absolute inset-0 w-full h-full object-cover opacity-80" />
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+        <div class="absolute bottom-8 left-8 right-8">
+          <p class="font-syne text-3xl font-extrabold">Built for the relentless.</p>
+        </div>
+      </div>
+      <div class="reveal-section space-y-8">
+        <p class="text-brand-accent text-xs font-semibold uppercase tracking-[0.2em]">About ODYSSEOS</p>
+        <h2 class="font-syne text-4xl sm:text-5xl font-extrabold leading-tight">Luxury Sports Nutrition for Modern Athletes</h2>
+        <p class="text-slate-300 font-light leading-relaxed">ODYSSEOS was born from a simple belief: peak performance deserves peak formulation. We fuse scientific precision with luxury design — because your body is your greatest investment.</p>
+        <div class="grid sm:grid-cols-2 gap-6">
+          <div class="glass-card rounded-2xl p-5"><h3 class="font-syne font-bold text-brand-accent mb-2">Mission</h3><p class="text-sm text-slate-400">Empower every athlete with transparent, premium-grade nutrition.</p></div>
+          <div class="glass-card rounded-2xl p-5"><h3 class="font-syne font-bold text-brand-accent mb-2">Vision</h3><p class="text-sm text-slate-400">Redefine sports supplementation as a cinematic luxury experience.</p></div>
+          <div class="glass-card rounded-2xl p-5"><h3 class="font-syne font-bold text-brand-accent mb-2">Why ODYSSEOS</h3><p class="text-sm text-slate-400">No fillers. No compromise. Only performance-first formulas.</p></div>
+          <div class="glass-card rounded-2xl p-5"><h3 class="font-syne font-bold text-brand-accent mb-2">Premium Ingredients</h3><p class="text-sm text-slate-400">Sourced globally, tested rigorously, blended expertly.</p></div>
+          <div class="glass-card rounded-2xl p-5"><h3 class="font-syne font-bold text-brand-accent mb-2">Scientific Formulation</h3><p class="text-sm text-slate-400">Lab-verified dosages aligned with elite sports science.</p></div>
+          <div class="glass-card rounded-2xl p-5"><h3 class="font-syne font-bold text-brand-accent mb-2">Athlete Tested</h3><p class="text-sm text-slate-400">Validated in real training environments worldwide.</p></div>
+        </div>
+        <p class="text-sm uppercase tracking-widest text-brand-accent/80">International Quality Standards · GMP · ISO Certified Partners</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="reviews" class="store-grid py-24 px-4 sm:px-8 border-t border-white/5">
+    <div class="max-w-7xl mx-auto reveal-section mb-12 text-center">
+      <p class="text-brand-accent text-xs font-semibold uppercase tracking-[0.2em] mb-3">Community</p>
+      <h2 class="font-syne text-4xl sm:text-5xl font-extrabold">Customer Reviews</h2>
+    </div>
+    <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-6" id="reviewsGrid"></div>
+  </section>
+
+  <section id="transformations" class="store-grid py-24 px-4 sm:px-8">
+    <div class="max-w-7xl mx-auto reveal-section mb-12">
+      <p class="text-brand-accent text-xs font-semibold uppercase tracking-[0.2em] mb-3">Real Results</p>
+      <h2 class="font-syne text-4xl sm:text-5xl font-extrabold">Transformation Stories</h2>
+    </div>
+    <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-8" id="storiesGrid"></div>
+  </section>
+
+  <section id="faq" class="store-grid py-24 px-4 sm:px-8 border-t border-white/5">
+    <div class="max-w-3xl mx-auto reveal-section">
+      <p class="text-brand-accent text-xs font-semibold uppercase tracking-[0.2em] mb-3 text-center">Support</p>
+      <h2 class="font-syne text-4xl sm:text-5xl font-extrabold text-center mb-12">FAQs</h2>
+      <div id="faqList" class="space-y-3"></div>
+    </div>
+  </section>
+
+  <section id="newsletter" class="store-grid py-24 px-4 sm:px-8">
+    <div class="max-w-3xl mx-auto reveal-section glass-card rounded-3xl p-10 sm:p-14 text-center border-brand-accent/20 shadow-neon-soft">
+      <h2 class="font-syne text-3xl sm:text-4xl font-extrabold mb-4">Join the ODYSSEOS Circle</h2>
+      <p class="text-slate-400 mb-8 font-light">Early drops, athlete protocols, and exclusive offers — delivered with precision.</p>
+      <form id="newsletterForm" class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+        <input type="email" required placeholder="Your email" class="flex-1 rounded-full bg-black/60 border border-white/15 px-5 py-3 text-sm focus:border-brand-accent/50 outline-none" />
+        <button type="submit" class="submit-glow bg-brand-500 hover:bg-brand-400 text-black font-bold rounded-full px-8 py-3 text-sm shadow-neon-soft transition-all">Subscribe</button>
+      </form>
+    </div>
+  </section>
+
+  <section id="instagram" class="store-grid py-24 px-4 sm:px-8 border-t border-white/5 pb-8">
+    <div class="max-w-7xl mx-auto reveal-section mb-10 flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="text-brand-accent text-xs font-semibold uppercase tracking-[0.2em] mb-3">@odysseos</p>
+        <h2 class="font-syne text-4xl font-extrabold">Instagram Feed</h2>
+      </div>
+      <a href="#" class="text-brand-accent text-sm font-semibold hover:underline">Follow on Instagram</a>
+    </div>
+    <div id="instaGrid" class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3"></div>
+  </section>
+
+  <section id="contact" class="store-grid py-28 px-4 sm:px-8 border-t border-white/5">
+    <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12">
+      <div class="reveal-section space-y-6">
+        <p class="text-brand-accent text-xs font-semibold uppercase tracking-[0.2em]">Contact Us</p>
+        <h2 class="font-syne text-4xl sm:text-5xl font-extrabold">We’re Here for Athletes</h2>
+        <div class="glass-card rounded-2xl p-6 space-y-4 text-sm text-slate-300">
+          <p><strong class="text-white">Support:</strong> support@odysseos.com</p>
+          <p><strong class="text-white">Customer Service:</strong> +1 (800) 555-0199</p>
+          <p><strong class="text-white">Hours:</strong> Mon–Fri 9:00–18:00 · Sat 10:00–14:00</p>
+          <div class="flex gap-4 pt-2">
+            <a href="#" class="hover:text-brand-accent"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+            <a href="#" class="hover:text-brand-accent"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+            <a href="#" class="hover:text-brand-accent"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+          </div>
+        </div>
+        <div class="glass-card rounded-2xl overflow-hidden h-48 flex items-center justify-center border-brand-accent/20">
+          <p class="text-slate-500 text-sm flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-brand-accent"></i> Google Maps — ODYSSEOS HQ, Performance District</p>
+        </div>
+      </div>
+      <form id="contactForm" class="reveal-section glass-card rounded-3xl p-8 space-y-4">
+        <input name="name" required placeholder="Full Name" class="w-full rounded-xl bg-black/50 border border-white/10 px-4 py-3 text-sm focus:border-brand-accent/50 outline-none" />
+        <input name="email" type="email" required placeholder="Email" class="w-full rounded-xl bg-black/50 border border-white/10 px-4 py-3 text-sm focus:border-brand-accent/50 outline-none" />
+        <input name="phone" placeholder="Phone" class="w-full rounded-xl bg-black/50 border border-white/10 px-4 py-3 text-sm focus:border-brand-accent/50 outline-none" />
+        <input name="subject" required placeholder="Subject" class="w-full rounded-xl bg-black/50 border border-white/10 px-4 py-3 text-sm focus:border-brand-accent/50 outline-none" />
+        <textarea name="message" required rows="4" placeholder="Message" class="w-full rounded-xl bg-black/50 border border-white/10 px-4 py-3 text-sm focus:border-brand-accent/50 outline-none resize-none"></textarea>
+        <button type="submit" class="submit-glow w-full bg-brand-500 hover:bg-brand-400 text-black font-bold rounded-full py-3.5 shadow-neon-soft transition-all">Send Message</button>
+      </form>
+    </div>
+  </section>
+
+  <footer class="store-grid border-t border-white/10 py-16 px-4 sm:px-8">
+    <div class="max-w-7xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-10 reveal-section">
+      <div>
+        <span class="font-syne text-2xl font-extrabold">ODYSSEOS</span>
+        <p class="text-slate-400 text-sm mt-4 font-light">Premium sports nutrition engineered for champions.</p>
+      </div>
+      <div>
+        <h4 class="font-syne font-bold mb-4">Shop</h4>
+        <ul class="space-y-2 text-sm text-slate-400">
+          <li><a href="#catalog" class="hover:text-brand-accent">All Products</a></li>
+          <li><a href="#best-sellers" class="hover:text-brand-accent">Best Sellers</a></li>
+          <li><a href="#new-arrivals" class="hover:text-brand-accent">New Arrivals</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-syne font-bold mb-4">Company</h4>
+        <ul class="space-y-2 text-sm text-slate-400">
+          <li><a href="#about" class="hover:text-brand-accent">About</a></li>
+          <li><a href="#contact" class="hover:text-brand-accent">Contact</a></li>
+          <li><a href="#faq" class="hover:text-brand-accent">FAQs</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-syne font-bold mb-4">Status</h4>
+        <p class="font-mono text-xs text-brand-accent uppercase tracking-wider flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse"></span>
+          Athlete Mode Enabled
+        </p>
+      </div>
+    </div>
+    <p class="max-w-7xl mx-auto mt-12 pt-8 border-t border-white/5 text-center text-xs text-slate-500">© 2026 ODYSSEOS. All rights reserved.</p>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+
+    const IMGS = [
+      'https://images.unsplash.com/photo-1593095948071-474c5cc2989d?w=400&q=80',
+      'https://images.unsplash.com/photo-1579722821273-ff74f2a79f8?w=400&q=80',
+      'https://images.unsplash.com/photo-1622480519770-268854a86a37?w=400&q=80',
+      'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&q=80',
+      'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400&q=80',
+      'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50?w=400&q=80',
+    ];
+
+    const CATALOG = {
+      'Whey Protein': [
+        { id: 'wp-v', name: 'ODYSSEOS Whey Vanilla', price: 54.99, desc: 'Silky vanilla whey for daily muscle support.', featured: true, best: true, img: 'images/vanilaproten.png' },
+        { id: 'wp-c', name: 'ODYSSEOS Whey Chocolate', price: 54.99, desc: 'Rich cocoa whey with superior mixability.', featured: true, img: 'images/chocprotein.png' },
+        { id: 'wp-s', name: 'ODYSSEOS Whey Strawberry', price: 54.99, desc: 'Bright berry profile, ultra-smooth texture.', new: true, img: 'images/whstrpng.png' },
+        { id: 'wp-g', name: 'Gold Isolate', price: 64.99, desc: 'Ultra-pure isolate for lean definition.', best: true, img: 'images/iso.jpg' },
+        { id: 'wp-h', name: 'Hydro Whey', price: 69.99, desc: 'Hydrolyzed protein for rapid absorption.', new: true, img: 'images/hydro.png' },
+      ],
+      'Creatine': [
+        { id: 'cr-m', name: 'Creatine Monohydrate', price: 29.99, desc: 'Clinically dosed strength and power.', featured: true, best: true, img: 'images/creatine.png' },
+        { id: 'cr-mi', name: 'Micronized Creatine', price: 32.99, desc: 'Finer particles, faster dissolution.', new: true, img: 'images/creatine.png' },
+        { id: 'cr-cp', name: 'Creapure', price: 39.99, desc: 'German-certified purity standard.', best: true, img: 'images/creapure.jpg' },
+      ],
+      'Pre Workout': [
+        { id: 'pw-ep', name: 'Extreme Pump', price: 44.99, desc: 'Vascularity and focus for heavy sessions.', featured: true },
+        { id: 'pw-ex', name: 'Energy X', price: 42.99, desc: 'Clean stimulant matrix, zero crash.', best: true, img: 'images/energyx.png' },
+        { id: 'pw-nb', name: 'Nitro Boost', price: 46.99, desc: 'Nitric oxide stack for endurance.', new: true, img: 'images/nitroboost.png' },
+      ],
+      'Recovery': [
+        { id: 'rc-bc', name: 'BCAA', price: 34.99, desc: 'Protect muscle during intense training.', featured: true, img: 'images/bcaa.jpg' },
+        { id: 'rc-ea', name: 'EAA', price: 36.99, desc: 'Full essential amino spectrum.', new: true, img: 'images/eaa.png' },
+        { id: 'rc-gl', name: 'Glutamine', price: 28.99, desc: 'Gut and recovery support post-workout.', best: true, img: 'images/glutamine.jpg' },
+      ],
+      'Mass Gainer': [
+        { id: 'mg-mm', name: 'Mega Mass', price: 59.99, desc: 'High-calorie blend for serious size.', featured: true, img: 'images/mega.jpg' },
+        { id: 'mg-hc', name: 'Hyper Calories', price: 62.99, desc: 'Advanced carb-protein matrix.', new: true },
+      ],
+      'Vitamins': [
+        { id: 'vt-mv', name: 'Multivitamin', price: 24.99, desc: 'Daily micronutrient foundation.', best: true, img: 'images/multi.jpg' },
+        { id: 'vt-o3', name: 'Omega 3', price: 27.99, desc: 'Heart, joint, and brain support.' },
+        { id: 'vt-zn', name: 'Zinc', price: 14.99, desc: 'Immune and hormone optimization.' },
+        { id: 'vt-d3', name: 'Vitamin D3', price: 16.99, desc: 'Bone health and performance recovery.', new: true },
+      ],
+      'Accessories': [
+        { id: 'ac-sh', name: 'Shaker', price: 12.99, desc: 'Leak-proof luxury shaker bottle.' },
+        { id: 'ac-gb', name: 'Gym Bottle', price: 18.99, desc: 'Insulated steel bottle, 750ml.', new: true, img: 'images/water.png' },
+        { id: 'ac-ls', name: 'Lifting Straps', price: 22.99, desc: 'Premium cotton straps for heavy pulls.', img: 'images/straps.jpg' },
+        { id: 'ac-ww', name: 'Wrist Wraps', price: 19.99, desc: 'Stable wrists for press movements.', best: true },
+      ],
+    };
+
+    const CATEGORY_ICONS = {
+      'Whey Protein': 'flask-conical', 'Creatine': 'zap', 'Pre Workout': 'activity',
+      'Recovery': 'heart-pulse', 'Mass Gainer': 'trending-up', 'Vitamins': 'pill', 'Accessories': 'shopping-bag',
+    };
+
+    function imgFor(id) {
+      let h = 0;
+      for (let i = 0; i < id.length; i++) h += id.charCodeAt(i);
+      return IMGS[h % IMGS.length];
+    }
+
+    function productCard(p, delay = 0) {
+      const img = p.img || imgFor(p.id);
+      return `
+        <article class="product-card glass-card rounded-3xl overflow-hidden reveal-section" data-id="${p.id}">
+          <div class="product-image-wrap relative h-56 sm:h-64 flex items-end justify-center p-6">
+            <button type="button" class="wishlist-btn absolute top-4 right-4 glass-btn w-10 h-10 rounded-full flex items-center justify-center text-slate-300 hover:text-brand-accent" aria-label="Wishlist"><i data-lucide="heart" class="w-4 h-4"></i></button>
+            <img class="product-img float-product max-h-44 w-auto object-contain drop-shadow-[0_20px_40px_rgba(255,107,0,0.4)]" style="animation-delay:${delay}s" src="${img}" alt="${p.name}" />
+          </div>
+          <div class="p-5 border-t border-white/5">
+            <h3 class="font-syne text-lg font-bold mb-1">${p.name}</h3>
+            <p class="text-slate-400 text-sm mb-4 font-light line-clamp-2">${p.desc}</p>
+            <div class="flex items-center justify-between gap-2 flex-wrap">
+              <span class="font-syne text-xl font-extrabold text-brand-accent">$${p.price.toFixed(2)}</span>
+              <button type="button" class="add-cart-btn add-cart bg-brand-500 hover:bg-brand-400 text-black font-bold rounded-full px-4 py-2 text-xs sm:text-sm shadow-neon-soft" data-id="${p.id}" data-name="${p.name}" data-price="${p.price}" data-img="${img}">Add To Cart</button>
+            </div>
+          </div>
+        </article>`;
+    }
+
+    function allProducts() {
+      return Object.entries(CATALOG).flatMap(([cat, items]) => items.map((p) => ({ ...p, category: cat })));
+    }
+
+    const products = allProducts();
+
+    document.getElementById('categoryGrid').innerHTML = Object.keys(CATALOG).map((cat) => `
+      <a href="#cat-${cat.replace(/\s+/g, '-')}" class="category-pill rounded-2xl p-5 sm:p-6 text-center group">
+        <i data-lucide="${CATEGORY_ICONS[cat] || 'package'}" class="w-7 h-7 mx-auto text-brand-accent mb-3 group-hover:scale-110 transition-transform"></i>
+        <span class="font-syne font-bold text-sm sm:text-base">${cat}</span>
+      </a>`).join('');
+
+    document.getElementById('featuredGrid').innerHTML = products.filter((p) => p.featured).map((p, i) => productCard(p, i * 0.15)).join('');
+    document.getElementById('bestSellersGrid').innerHTML = products.filter((p) => p.best).slice(0, 8).map((p, i) => productCard(p, i * 0.1)).join('');
+    document.getElementById('newArrivalsGrid').innerHTML = products.filter((p) => p.new).map((p, i) => productCard(p, i * 0.12)).join('');
+
+    document.getElementById('catalogSections').innerHTML = Object.entries(CATALOG).map(([cat, items]) => `
+      <div id="cat-${cat.replace(/\s+/g, '-')}" class="reveal-section scroll-mt-24">
+        <h3 class="font-syne text-2xl sm:text-3xl font-bold mb-8 flex items-center gap-3">
+          <span class="w-2 h-8 rounded-full bg-brand-accent shadow-neon-soft"></span>${cat}
+        </h3>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">${items.map((p, i) => productCard(p, i * 0.08)).join('')}</div>
+      </div>`).join('');
+
+    document.getElementById('reviewsGrid').innerHTML = [
+      { name: 'Marcus T.', text: 'Gold Isolate changed my cut phase — luxury quality, real results.', stars: 5 },
+      { name: 'Elena R.', text: 'Pre Workout Extreme hits like a cinematic experience. Clean energy.', stars: 5 },
+      { name: 'Jordan K.', text: 'The brand feels Apple-level premium. BCAA Recovery is my daily ritual.', stars: 5 },
+    ].map((r) => `
+      <div class="glass-card rounded-2xl p-6 reveal-section">
+        <div class="flex gap-1 text-brand-accent mb-4">${'★'.repeat(r.stars)}</div>
+        <p class="text-slate-300 font-light mb-4">"${r.text}"</p>
+        <p class="font-syne font-bold text-sm">${r.name}</p>
+      </div>`).join('');
+
+    document.getElementById('storiesGrid').innerHTML = [
+      { title: 'From Plateau to Podium', body: 'After 90 days on ODYSSEOS Whey and Creatine Monohydrate, I added 8kg to my total and finally broke my squat PR.', tag: 'Strength' },
+      { title: 'Endurance Rebuilt', body: 'BCAA + Energy X transformed my marathon prep — faster recovery, sharper focus, zero bloat.', tag: 'Endurance' },
+    ].map((s) => `
+      <div class="glass-card rounded-3xl p-8 reveal-section border-brand-accent/15">
+        <span class="text-xs uppercase tracking-widest text-brand-accent">${s.tag}</span>
+        <h3 class="font-syne text-2xl font-bold mt-2 mb-4">${s.title}</h3>
+        <p class="text-slate-400 font-light">${s.body}</p>
+      </div>`).join('');
+
+    const faqs = [
+      { q: 'Are ODYSSEOS products third-party tested?', a: 'Yes. Every batch is tested for purity, potency, and banned substances.' },
+      { q: 'How fast is shipping?', a: 'Standard delivery is 2–5 business days. Express options available at checkout.' },
+      { q: 'Can I stack pre-workout with creatine?', a: 'Absolutely. Our formulas are designed for safe, synergistic stacking.' },
+      { q: 'Do you ship internationally?', a: 'We ship to 40+ countries with full tracking and customs support.' },
+    ];
+    document.getElementById('faqList').innerHTML = faqs.map((f) => `
+      <div class="faq-item glass-card rounded-xl px-5 py-4 cursor-pointer">
+        <div class="flex justify-between items-center gap-4 font-syne font-semibold">${f.q}<i data-lucide="chevron-down" class="w-5 h-5 text-brand-accent shrink-0"></i></div>
+        <p class="faq-answer text-slate-400 text-sm pt-3">${f.a}</p>
+      </div>`).join('');
+
+    document.getElementById('instaGrid').innerHTML = IMGS.concat(IMGS).slice(0, 6).map((src, i) => `
+      <a href="#" class="reveal-section aspect-square rounded-xl overflow-hidden glass-card group">
+        <img src="${src}" alt="" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" />
+      </a>`).join('');
+
+    lucide.createIcons();
+
+    /* ——— Hero (unchanged logic) ——— */
+    const heroContainer = document.getElementById('heroContainer');
+    const maskLayer = document.getElementById('maskLayer');
+    const spotlightHalo = document.getElementById('spotlightHalo');
+    const particlesCanvas = document.getElementById('particlesCanvas');
+    const ctx = particlesCanvas.getContext('2d');
+
+    let targetX = window.innerWidth * 0.65;
+    let targetY = window.innerHeight * 0.5;
+    let currentX = targetX;
+    let currentY = targetY;
+    let isHovered = false;
+    let spotlightRadius = 140;
+
+    function updateMask() {
+      const maskStyle = `radial-gradient(circle ${spotlightRadius}px at ${currentX}px ${currentY}px, black 0%, rgba(0,0,0,0.85) 45%, rgba(0,0,0,0.3) 70%, transparent 100%)`;
+      maskLayer.style.maskImage = maskStyle;
+      maskLayer.style.webkitMaskImage = maskStyle;
+      spotlightHalo.style.left = `${currentX}px`;
+      spotlightHalo.style.top = `${currentY}px`;
+      spotlightHalo.style.width = `${spotlightRadius * 2}px`;
+      spotlightHalo.style.height = `${spotlightRadius * 2}px`;
+    }
+
+    function animateSpotlight() {
+      const ease = isHovered ? 0.15 : 0.04;
+      currentX += (targetX - currentX) * ease;
+      currentY += (targetY - currentY) * ease;
+      if (!isHovered) {
+        const time = Date.now() * 0.0012;
+        targetX = window.innerWidth * 0.65 + Math.cos(time) * 50;
+        targetY = window.innerHeight * 0.5 + Math.sin(time * 1.3) * 35;
+      }
+      updateMask();
+      requestAnimationFrame(animateSpotlight);
+    }
+
+    heroContainer.addEventListener('mousemove', (e) => {
+      targetX = e.clientX; targetY = e.clientY; isHovered = true;
+      spotlightHalo.classList.remove('hero-hidden');
+    });
+    heroContainer.addEventListener('mouseleave', () => { isHovered = false; spotlightHalo.classList.add('hero-hidden'); });
+    heroContainer.addEventListener('touchmove', (e) => {
+      if (e.touches.length) {
+        targetX = e.touches[0].clientX; targetY = e.touches[0].clientY; isHovered = true;
+        spotlightHalo.classList.remove('hero-hidden');
+      }
+    }, { passive: true });
+    heroContainer.addEventListener('touchend', () => { isHovered = false; spotlightHalo.classList.add('hero-hidden'); });
+
+    new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting && !isHovered) spotlightHalo.classList.add('hero-hidden');
+    }, { threshold: 0.15 }).observe(heroContainer);
+
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      if (!isHovered) { targetX = window.innerWidth * 0.65; targetY = window.innerHeight * 0.5; }
+    });
+
+    const PARTICLE_COUNT = 48;
+    let particles = [];
+
+    function resizeCanvas() {
+      const w = heroContainer.clientWidth;
+      const h = heroContainer.clientHeight;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      particlesCanvas.width = w * dpr;
+      particlesCanvas.height = h * dpr;
+      particlesCanvas.style.width = `${w}px`;
+      particlesCanvas.style.height = `${h}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      particles = Array.from({ length: PARTICLE_COUNT }, () => ({
+        x: Math.random() * w, y: Math.random() * h,
+        r: 0.8 + Math.random() * 2.2,
+        vx: (Math.random() - 0.5) * 0.35, vy: (Math.random() - 0.5) * 0.35,
+        alpha: 0.25 + Math.random() * 0.55, pulse: Math.random() * Math.PI * 2,
+      }));
+    }
+
+    function drawParticles() {
+      const w = heroContainer.clientWidth;
+      const h = heroContainer.clientHeight;
+      ctx.clearRect(0, 0, w, h);
+      const t = Date.now() * 0.001;
+      for (const p of particles) {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
+        if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
+        const glow = p.alpha * (0.7 + 0.3 * Math.sin(t * 2 + p.pulse));
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 107, 0, ${glow})`;
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = 'rgba(255, 107, 0, 0.85)';
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+      requestAnimationFrame(drawParticles);
+    }
+
+    resizeCanvas();
+    animateSpotlight();
+    drawParticles();
+
+    /* Mobile menu */
+    const mobileDrawer = document.getElementById('mobileDrawer');
+    const menuBackdrop = document.getElementById('menuBackdrop');
+    const menuToggle = document.getElementById('menuToggle');
+
+    function setMenuOpen(open) {
+      mobileDrawer.classList.toggle('open', open);
+      menuBackdrop.classList.toggle('opacity-0', !open);
+      menuBackdrop.classList.toggle('pointer-events-none', !open);
+      menuToggle.setAttribute('aria-expanded', String(open));
+      menuToggle.innerHTML = open ? '<i data-lucide="x" class="w-5 h-5"></i>' : '<i data-lucide="menu" class="w-5 h-5"></i>';
+      lucide.createIcons();
+    }
+    menuToggle.addEventListener('click', () => setMenuOpen(!mobileDrawer.classList.contains('open')));
+    menuBackdrop.addEventListener('click', () => setMenuOpen(false));
+    document.querySelectorAll('#mobileDrawer a[href^="#"]').forEach((l) => l.addEventListener('click', () => setMenuOpen(false)));
+
+    /* Audio */
+    let audioCtx = null;
+    let soundEnabled = false;
+    const soundToggle = document.getElementById('soundToggle');
+
+    function playTone() {
+      if (!soundEnabled) return;
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.12);
+      gain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.2);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.22);
+    }
+
+    soundToggle.addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      if (audioCtx?.state === 'suspended') audioCtx.resume();
+      soundToggle.innerHTML = soundEnabled
+        ? '<i data-lucide="volume-2" class="w-5 h-5 text-brand-accent"></i>'
+        : '<i data-lucide="volume-x" class="w-5 h-5"></i>';
+      lucide.createIcons();
+      if (soundEnabled) playTone();
+    });
+
+    /* Cart */
+    let cart = [];
+    let discountRate = 0;
+    const SHIPPING = 9.99;
+    const cartDrawer = document.getElementById('cartDrawer');
+    const cartBackdrop = document.getElementById('cartBackdrop');
+    const cartBadge = document.getElementById('cartBadge');
+    const floatCartBtn = document.getElementById('floatCartBtn');
+
+    function cartCount() {
+      return cart.reduce((s, i) => s + i.qty, 0);
+    }
+
+    function subtotal() {
+      return cart.reduce((s, i) => s + i.price * i.qty, 0);
+    }
+
+    function renderCart() {
+      const el = document.getElementById('cartItems');
+      if (!cart.length) {
+        el.innerHTML = '<p class="text-slate-500 text-sm text-center py-12">Your cart is empty.</p>';
+      } else {
+        el.innerHTML = cart.map((item) => `
+          <div class="glass-card rounded-xl p-4 flex gap-3" data-cart-id="${item.id}">
+            <img src="${item.img}" alt="" class="w-16 h-16 object-contain rounded-lg bg-black/40" />
+            <div class="flex-1 min-w-0">
+              <p class="font-semibold text-sm truncate">${item.name}</p>
+              <p class="text-brand-accent font-syne font-bold">$${item.price.toFixed(2)}</p>
+              <div class="flex items-center gap-2 mt-2">
+                <button type="button" class="qty-btn qty-minus flex items-center justify-center text-brand-accent" data-id="${item.id}">−</button>
+                <span class="text-sm w-6 text-center">${item.qty}</span>
+                <button type="button" class="qty-btn qty-plus flex items-center justify-center text-brand-accent" data-id="${item.id}">+</button>
+                <button type="button" class="ml-auto text-xs text-slate-500 hover:text-red-400 remove-item" data-id="${item.id}">Remove</button>
+              </div>
+            </div>
+          </div>`).join('');
+      }
+      const sub = subtotal();
+      const disc = sub * discountRate;
+      const total = Math.max(0, sub - disc) + (cart.length ? SHIPPING : 0);
+      document.getElementById('cartSubtotal').textContent = `$${sub.toFixed(2)}`;
+      document.getElementById('cartShipping').textContent = cart.length ? `$${SHIPPING.toFixed(2)}` : '$0.00';
+      document.getElementById('cartTotal').textContent = `$${total.toFixed(2)}`;
+      const count = cartCount();
+      cartBadge.textContent = count;
+      cartBadge.classList.toggle('visible', count > 0);
+      lucide.createIcons();
+    }
+
+    function openCart() {
+      cartBackdrop.style.pointerEvents = 'auto';
+      gsap.to(cartBackdrop, { opacity: 1, duration: 0.35 });
+      gsap.to(cartDrawer, { x: 0, duration: 0.55, ease: 'power3.out' });
+    }
+
+    function closeCart() {
+      gsap.to(cartBackdrop, { opacity: 0, duration: 0.3, onComplete: () => { cartBackdrop.style.pointerEvents = 'none'; } });
+      gsap.to(cartDrawer, { x: '100%', duration: 0.45, ease: 'power3.in' });
+    }
+
+    function addToCart(data, sourceEl) {
+      const existing = cart.find((i) => i.id === data.id);
+      if (existing) existing.qty += 1;
+      else cart.push({ ...data, qty: 1 });
+      renderCart();
+      if (sourceEl) flyToCart(sourceEl);
+      gsap.fromTo(cartBadge, { scale: 1.4 }, { scale: 1, duration: 0.4, ease: 'back.out(2)' });
+      if (soundEnabled) playTone();
+    }
+
+    function flyToCart(sourceEl) {
+      const rect = sourceEl.getBoundingClientRect();
+      const target = floatCartBtn.getBoundingClientRect();
+      const clone = document.createElement('div');
+      clone.className = 'fly-clone bg-brand-accent/80';
+      clone.style.width = '24px';
+      clone.style.height = '24px';
+      clone.style.left = `${rect.left + rect.width / 2}px`;
+      clone.style.top = `${rect.top}px`;
+      document.body.appendChild(clone);
+      gsap.to(clone, {
+        left: target.left + target.width / 2,
+        top: target.top + target.height / 2,
+        width: 8, height: 8, opacity: 0.2, duration: 0.65, ease: 'power2.in',
+        onComplete: () => clone.remove(),
+      });
+    }
+
+    document.body.addEventListener('click', (e) => {
+      const btn = e.target.closest('.add-cart');
+      if (!btn) return;
+      addToCart({
+        id: btn.dataset.id,
+        name: btn.dataset.name,
+        price: parseFloat(btn.dataset.price),
+        img: btn.dataset.img,
+      }, btn);
+    });
+
+    document.getElementById('cartItems').addEventListener('click', (e) => {
+      const id = e.target.dataset?.id;
+      if (!id) return;
+      const item = cart.find((i) => i.id === id);
+      if (!item) return;
+      if (e.target.classList.contains('qty-plus')) item.qty += 1;
+      if (e.target.classList.contains('qty-minus')) item.qty = Math.max(1, item.qty - 1);
+      if (e.target.classList.contains('remove-item')) cart = cart.filter((i) => i.id !== id);
+      renderCart();
+    });
+
+    document.getElementById('applyDiscount').addEventListener('click', () => {
+      const code = document.getElementById('discountInput').value.trim().toUpperCase();
+      const note = document.getElementById('discountNote');
+      if (code === 'ODYSSEOS10') {
+        discountRate = 0.1;
+        note.textContent = '10% athlete discount applied.';
+        note.classList.remove('hidden');
+      } else {
+        discountRate = 0;
+        note.textContent = code ? 'Invalid code.' : '';
+        note.classList.toggle('hidden', !code);
+      }
+      renderCart();
+    });
+
+    floatCartBtn.addEventListener('click', openCart);
+    document.getElementById('cartClose').addEventListener('click', closeCart);
+    cartBackdrop.addEventListener('click', closeCart);
+    document.getElementById('checkoutBtn').addEventListener('click', () => {
+      if (cart.length) alert('Checkout — ODYSSEOS secure payment coming soon.');
+    });
+
+    renderCart();
+    gsap.set(cartDrawer, { x: '100%' });
+
+    document.querySelectorAll('.wishlist-btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        btn.classList.toggle('text-brand-accent');
+        if (soundEnabled) playTone();
+      });
+    });
+
+    document.querySelectorAll('.faq-item').forEach((item) => {
+      item.addEventListener('click', () => item.classList.toggle('open'));
+    });
+
+    document.getElementById('newsletterForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      gsap.fromTo(e.target.querySelector('.submit-glow'), { scale: 0.96 }, { scale: 1, duration: 0.35, ease: 'elastic.out(1, 0.5)' });
+      if (soundEnabled) playTone();
+      e.target.reset();
+    });
+
+    document.getElementById('contactForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      gsap.fromTo(e.target.querySelector('.submit-glow'), { scale: 0.96 }, { scale: 1, duration: 0.35, ease: 'elastic.out(1, 0.5)' });
+      if (soundEnabled) playTone();
+      e.target.reset();
+    });
+
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.utils.toArray('.reveal-section').forEach((section) => {
+      gsap.to(section, {
+        scrollTrigger: { trigger: section, start: 'top 88%', toggleActions: 'play none none reverse' },
+        opacity: 1, y: 0, duration: 1, ease: 'power3.out',
+      });
+    });
+
+    gsap.utils.toArray('.product-card').forEach((card, i) => {
+      const img = card.querySelector('.product-img');
+      if (!img) return;
+      gsap.from(img, {
+        scrollTrigger: { trigger: card, start: 'top 82%' },
+        y: 28, opacity: 0, duration: 1, delay: (i % 4) * 0.06, ease: 'power3.out',
+      });
+    });
+  </script>
+</body>
+</html>
